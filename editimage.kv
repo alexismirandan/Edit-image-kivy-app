@@ -1,0 +1,27 @@
+#:import Window kivy.core.window.Window
+#######################################################
+####[start layout]: Crop Image Layout #################
+#######################################################
+<CropImageLayout>:
+	rectangle_selector: rectangle_selector
+	image_layout: image_layout
+    canvas.before:
+        Color:
+            rgba: (1, 1, 1, 1)
+        Rectangle:
+            pos: self.pos
+			size: Window.width, Window.height
+	Image:
+		id: image_layout
+		source: 'image.jpg'
+		size: Window.width*.8, Window.height*.8
+		pos: Window.width*.1, Window.height*.1
+		size_hint: None, None
+		pos_hint_x: None
+		pos_hint_y: None
+	TouchSelector:
+		id: rectangle_selector
+
+#######################################################
+####[end layout]: Crop Image Layout #################
+#######################################################
