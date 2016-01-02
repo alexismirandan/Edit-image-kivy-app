@@ -25,6 +25,10 @@ class TouchSelector(Widget):
     width_selected = NumericProperty(0)
     height_selected = NumericProperty(0)
 
+    # Widht and Height old of selected rectangle (line drawn with touch)
+    width_selected_old = ObjectProperty(0)
+    height_selected_old = ObjectProperty(0)
+
     # Line Color and width
     line_color = ListProperty([1, 1, 1, 1])
     line_width = NumericProperty(3)
@@ -64,10 +68,15 @@ class TouchSelector(Widget):
             # Save the created line
             self.list_lines_in_image.append(self.line)
 
-    def remove_old_line(self, instance, list_lines):
+    def remove_old_line(self, instance=None, list_lines=None):
         """Remove the old line draw"""
-        if len(list_lines) > 1:
-            list_lines.pop(0).points = []
+        if len(self.list_lines_in_image) > 1:
+            self.delete_line()
+
+    def delete_line(self, pos=0):
+        try:
+            self.list_lines_in_image.pop(pos).points = []
+        except: pass
 
     def on_touch_move(self, touch):
         # Assign the position of the touch at the point C
@@ -88,8 +97,23 @@ class TouchSelector(Widget):
     def set_width_height(self):
         width = abs(self.Cx - self.Dx)
         height = abs(self.Cy - self.By)
+
         if self.first_tap or self.width_selected != 0 and self.height_selected != 0:
+            dispatch_on_change_size = False
             if self.first_tap or width != self.width_selected and height != self.height_selected:
-                self.dispatch('on_change_size')
+                dispatch_on_change_size = True
+
             self.width_selected = width if width != 0 else self.width_selected
             self.height_selected = height if height != 0 else self.height_selected
+
+            if dispatch_on_change_size:
+                self.dispatch('on_change_size')
+
+            self.width_selected_old = self.width_selected
+            self.height_selected_old = self.height_selected
+
+    def tap_not_draw_a_line(self):
+        """
+        When touchdown is called and tap not draw a line.
+        """
+        return (self.width_selected_old == self.width_selected and self.height_selected_old == self.height_selected)

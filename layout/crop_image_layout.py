@@ -25,15 +25,16 @@ class CropImageLayout(FloatLayout):
         self.bubble_buttons.resize_button.bind(on_press=self.on_press_resize_button)
 
     def on_change_size_rectangle_selector(self, instance):
-        x, y = Window.width*.4, Window.height*.1
-        self.bubble_buttons.pos = x, y
-        self.bubble_buttons.show()
+        self.bubble_buttons.pos = Window.width*.4, Window.height*.1
+        if not self.rectangle_selector.tap_not_draw_a_line():
+            self.bubble_buttons.show()
 
     def on_press_resize_button(self, instance):
         width = int(self.rectangle_selector.width_selected)
         height = int(self.rectangle_selector.height_selected)
         pos_x, pos_y = abs(Window.width - width)/2 , abs(Window.height - height)/2
         self.scale_image(width, height, pos_x, pos_y)
+        self.rectangle_selector.delete_line()
 
     def scale_image(self, width, height, pos_x, pos_y):
         try:
