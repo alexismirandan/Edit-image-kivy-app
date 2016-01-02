@@ -1,6 +1,5 @@
 # -*- coding: utf-8 -*
 from kivy.app import App
-from layout.inicio_layout import InicioLayout, ResizeImageLayout
 from layout.crop_image_layout import CropImageLayout
 from kivy.uix.screenmanager import ScreenManager, Screen
 
