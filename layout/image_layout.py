@@ -17,9 +17,9 @@ class ImageLayout(Image):
                                ext=self.path_image[self.path_image.rfind('.') + 1::])
         self.source = self.path_image
 
-    def scale_image(self, width, height, pos_x, pos_y):
+    def resize_image(self, width, height, pos_x, pos_y):
         try:
-            self.image.scale(self.path_image,
+            self.image.resize(self.path_image,
                              self.path_image_tmp,
                              int(width),
                              int(height))

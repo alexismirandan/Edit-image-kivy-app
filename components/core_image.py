@@ -8,7 +8,7 @@ class CoreImage(CoreImageKivy):
     def __init__(self, arg, **kwargs):
         super(CoreImage, self).__init__(arg, **kwargs)
 
-    def scale(self, fname, fname_scaled, width, height):
+    def resize(self, fname, fname_scaled, width, height):
         """
         reduces the size of an image.
         """

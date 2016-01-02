@@ -1,6 +1,6 @@
 # -*- coding: utf-8 -*
 from kivy.app import App
-from layout.crop_image_layout import CropImageLayout
+from layout.edit_image_layout import EditImageLayout
 from kivy.uix.screenmanager import ScreenManager, Screen
 
 __version__ = '0.1'
@@ -17,7 +17,7 @@ class EditImageScreen(BaseLayaout):
         self.layout = None
 
     def on_pre_enter(self):
-        self.layout = CropImageLayout(sm=sm)
+        self.layout = EditImageLayout(sm=sm)
         self.add_widget(self.layout)
 
 
