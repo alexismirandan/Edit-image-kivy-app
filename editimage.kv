@@ -5,15 +5,15 @@
 <CropImageLayout>:
 	rectangle_selector: rectangle_selector
 	image_layout: image_layout
+	bubble_buttons: bubble_buttons
     canvas.before:
         Color:
-            rgba: (1, 1, 1, 1)
+            rgba: (0, 0, 0, 1)
         Rectangle:
             pos: self.pos
 			size: Window.width, Window.height
 	Image:
 		id: image_layout
-		source: 'image.jpg'
 		size: Window.width*.8, Window.height*.8
 		pos: Window.width*.1, Window.height*.1
 		size_hint: None, None
@@ -21,7 +21,29 @@
 		pos_hint_y: None
 	TouchSelector:
 		id: rectangle_selector
+	BubbleButtons:
+		id: bubble_buttons
+		size_hint: (None, None)
+		size: (200, 40)
+		pos_hint_x: None
+		pos_hint_y: None
+		pos: 100, 100
+		opacity: 0
+		arrow_pos: 'top_mid'
 
+<BubbleButtons>:
+	resize_button: resize_button
+	cut_button: cut_button
+	rotate_button: rotate_button
+    BubbleButton:
+		id: resize_button
+        text: 'Resize'
+    BubbleButton:
+		id: cut_button
+        text: 'Cortar'
+    BubbleButton:
+		id: rotate_button
+        text: 'Rotar'
 #######################################################
 ####[end layout]: Crop Image Layout #################
 #######################################################

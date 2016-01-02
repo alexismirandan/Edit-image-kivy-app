@@ -2,6 +2,7 @@
 from kivy.uix.widget import Widget
 from kivy.properties import NumericProperty, ListProperty, ObjectProperty
 from kivy.graphics import Line, Color
+from components import image
 
 class TouchSelector(Widget):
     # Points of Line object
@@ -27,22 +28,30 @@ class TouchSelector(Widget):
     # Line Color and width
     line_color = ListProperty([1, 1, 1, 1])
     line_width = NumericProperty(3)
+
+    # First tap in TouchSelector
+    first_tap = True
     
     def __init__(self, *args, **kwargs):
         super(TouchSelector, self).__init__(*args, **kwargs)
         #Bind list_lines_in_image attribute 
         self.bind(list_lines_in_image=self.remove_old_line)
+        self.register_event_type('on_change_size')
 
     def on_touch_up(self, touch):
-        self.width_selected = abs(self.Cx - self.Dx)
-        self.height_selected = abs(self.Cy - self.By)
+        self.set_width_height()
+        if self.first_tap:
+            self.first_tap = False
+
+    def on_change_size(self):
+        pass
 
     def on_touch_down(self, touch):
         with self.canvas:
             Color(self.line_color)
 
             # Save initial tap position
-            self.Ax, self.Ay = touch.x, touch.y
+            self.Ax, self.Ay = self.first_touch_x, self.first_touch_y = touch.x, touch.y
 
             # Initilize positions to save
             self.Bx, self.By = 0, 0
@@ -75,3 +84,12 @@ class TouchSelector(Widget):
                             self.Cx, self.Cy,
                             self.Dx, self.Dy,
                             self.Ax, self.Ay]
+
+    def set_width_height(self):
+        width = abs(self.Cx - self.Dx)
+        height = abs(self.Cy - self.By)
+        if self.first_tap or self.width_selected != 0 and self.height_selected != 0:
+            if self.first_tap or width != self.width_selected and height != self.height_selected:
+                self.dispatch('on_change_size')
+            self.width_selected = width if width != 0 else self.width_selected
+            self.height_selected = height if height != 0 else self.height_selected
