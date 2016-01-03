@@ -1,11 +1,12 @@
 #:import Window kivy.core.window.Window
 #######################################################
-####[start layout]: Crop Image Layout #################
+####[start layout]: Edit Image Layout #################
 #######################################################
 <EditImageLayout>:
 	rectangle_selector: rectangle_selector
 	image_layout: image_layout
 	bubble_buttons: bubble_buttons
+	bubble_buttons_undo_confirm: bubble_buttons_undo_confirm
     canvas.before:
         Color:
             rgba: (0, 0, 0, 1)
@@ -27,7 +28,16 @@
 		size: (200, 40)
 		pos_hint_x: None
 		pos_hint_y: None
-		pos: 100, 100
+		pos: Window.width*.4, Window.height*.1
+		opacity: 0
+		arrow_pos: 'top_mid'
+	BubbleButtonsUndoConfirm:
+		id: bubble_buttons_undo_confirm
+		size_hint: (None, None)
+		size: (200, 40)
+		pos_hint_x: None
+		pos_hint_y: None
+		pos: Window.width*.4, Window.height*.9
 		opacity: 0
 		arrow_pos: 'top_mid'
 
@@ -44,6 +54,16 @@
     BubbleButton:
 		id: rotate_button
         text: 'Rotar'
+
+<BubbleButtonsUndoConfirm>:
+	undo_button: undo_button
+	confirm_button: confirm_button
+    BubbleButton:
+		id: undo_button
+        text: 'Deshacer'
+    BubbleButton:
+		id: confirm_button
+        text: 'Confirmar'
 #######################################################
-####[end layout]: Crop Image Layout #################
+####[end layout]: Edit Image Layout #################
 #######################################################
