@@ -29,6 +29,9 @@ class TouchSelector(Widget):
     width_selected_old = ObjectProperty(0)
     height_selected_old = ObjectProperty(0)
 
+    # Size of selected rectangle
+    size_selected = ListProperty([0,0])
+
     # Line Color and width
     line_color = ListProperty([1, 1, 1, 1])
     line_width = NumericProperty(3)
@@ -93,6 +96,8 @@ class TouchSelector(Widget):
                             self.Cx, self.Cy,
                             self.Dx, self.Dy,
                             self.Ax, self.Ay]
+
+        self.size_selected = abs(self.Cx - self.Dx), abs(self.Cy - self.By)
 
     def set_width_height(self):
         width = abs(self.Cx - self.Dx)

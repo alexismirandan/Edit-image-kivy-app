@@ -11,6 +11,7 @@ class EditImageLayout(FloatLayout):
     button_color = ListProperty([0, 0, 0, 1])
 
     rectangle_selector = ObjectProperty()
+    text_size_rectangle = ObjectProperty()
     image_layout = ObjectProperty()
     bubble_buttons = ObjectProperty()
     bubble_buttons_undo_confirm = ObjectProperty()
@@ -21,6 +22,7 @@ class EditImageLayout(FloatLayout):
         super(EditImageLayout, self).__init__(**kwargs)
         self.rectangle_selector.bind(on_change_size=self.on_change_size_rectangle_selector)
         self.bind(on_touch_down=self.bubble_buttons.hide)
+        self.rectangle_selector.bind(size_selected=self.update_text_size_rectangle)
 
         self.bubble_buttons.resize_button.bind(on_press=self.on_press_resize_button)
         self.bubble_buttons_undo_confirm.undo_button.bind(on_press=self.on_press_undo_button)
@@ -29,6 +31,8 @@ class EditImageLayout(FloatLayout):
     def on_change_size_rectangle_selector(self, instance):
         if not self.rectangle_selector.tap_not_draw_a_line():
             self.bubble_buttons.show()
+        else:
+            self.text_size_rectangle.text = ''
 
     def on_press_resize_button(self, instance):
         width = int(self.rectangle_selector.width_selected)
@@ -36,6 +40,7 @@ class EditImageLayout(FloatLayout):
         self.image_layout.resize_image(width, height)
 
         self.rectangle_selector.delete_line()
+        self.text_size_rectangle.text = ''
 
         self.bubble_buttons_undo_confirm.show()
 
@@ -46,3 +51,6 @@ class EditImageLayout(FloatLayout):
 
     def on_press_confirm_button(self, instance):
         self.bubble_buttons_undo_confirm.hide()
+
+    def update_text_size_rectangle(self, instance, size):
+        self.text_size_rectangle.text = str('({0}, {1})'.format(int(size[0]), int(size[1])))
