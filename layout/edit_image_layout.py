@@ -20,24 +20,23 @@ class EditImageLayout(FloatLayout):
         self.sm = kwargs.pop('sm', None)
         self.crop_image_screen = kwargs.pop('crop_image_screen', None)
         super(EditImageLayout, self).__init__(**kwargs)
-        self.rectangle_selector.bind(on_change_size=self.on_change_size_rectangle_selector)
+        self.rectangle_selector.bind(size_selected=self.on_change_size_rectangle_selector)
+        self.rectangle_selector.bind(size_selected_temp=self.update_text_size_rectangle)
         self.bind(on_touch_down=self.bubble_buttons.hide)
-        self.rectangle_selector.bind(size_selected=self.update_text_size_rectangle)
 
         self.bubble_buttons.resize_button.bind(on_press=self.on_press_resize_button)
         self.bubble_buttons_undo_confirm.undo_button.bind(on_press=self.on_press_undo_button)
         self.bubble_buttons_undo_confirm.confirm_button.bind(on_press=self.on_press_confirm_button)
 
-    def on_change_size_rectangle_selector(self, instance):
+    def on_change_size_rectangle_selector(self, instance, size_selected):
         if not self.rectangle_selector.tap_not_draw_a_line():
             self.bubble_buttons.show()
         else:
             self.text_size_rectangle.text = ''
 
     def on_press_resize_button(self, instance):
-        width = int(self.rectangle_selector.width_selected)
-        height = int(self.rectangle_selector.height_selected)
-        self.image_layout.resize_image(width, height)
+        self.image_layout.resize_image(width=self.rectangle_selector.size_selected[0],
+                                       height=self.rectangle_selector.size_selected[1])
 
         self.rectangle_selector.delete_line()
         self.text_size_rectangle.text = ''

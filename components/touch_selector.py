@@ -21,16 +21,14 @@ class TouchSelector(Widget):
     # List of line objects drawn
     list_lines_in_image = ListProperty([])
 
-    # Widht and Height of selected rectangle (line drawn with touch)
-    width_selected = NumericProperty(0)
-    height_selected = NumericProperty(0)
-
-    # Widht and Height old of selected rectangle (line drawn with touch)
-    width_selected_old = ObjectProperty(0)
-    height_selected_old = ObjectProperty(0)
-
-    # Size of selected rectangle
+    # Size of the selected rectangle
     size_selected = ListProperty([0,0])
+
+    # Size previous of the selected rectangle
+    size_selected_previous = ListProperty([0,0])
+
+    # Size temporary of the selected rectangle
+    size_selected_temp = ListProperty([0,0])
 
     # Line Color and width
     line_color = ListProperty([1, 1, 1, 1])
@@ -41,17 +39,11 @@ class TouchSelector(Widget):
     
     def __init__(self, *args, **kwargs):
         super(TouchSelector, self).__init__(*args, **kwargs)
-        #Bind list_lines_in_image attribute 
         self.bind(list_lines_in_image=self.remove_old_line)
-        self.register_event_type('on_change_size')
 
     def on_touch_up(self, touch):
-        self.set_width_height()
-        if self.first_tap:
-            self.first_tap = False
-
-    def on_change_size(self):
-        pass
+        self.size_selected = abs(self.Cx - self.Dx), abs(self.Cy - self.By)
+        self.size_selected_previous = self.size_selected
 
     def on_touch_down(self, touch):
         with self.canvas:
@@ -97,28 +89,10 @@ class TouchSelector(Widget):
                             self.Dx, self.Dy,
                             self.Ax, self.Ay]
 
-        self.size_selected = abs(self.Cx - self.Dx), abs(self.Cy - self.By)
-
-    def set_width_height(self):
-        width = abs(self.Cx - self.Dx)
-        height = abs(self.Cy - self.By)
-
-        if self.first_tap or self.width_selected != 0 and self.height_selected != 0:
-            dispatch_on_change_size = False
-            if self.first_tap or width != self.width_selected and height != self.height_selected:
-                dispatch_on_change_size = True
-
-            self.width_selected = width if width != 0 else self.width_selected
-            self.height_selected = height if height != 0 else self.height_selected
-
-            if dispatch_on_change_size:
-                self.dispatch('on_change_size')
-
-            self.width_selected_old = self.width_selected
-            self.height_selected_old = self.height_selected
+        self.size_selected_temp = abs(self.Cx - self.Dx), abs(self.Cy - self.By)
 
     def tap_not_draw_a_line(self):
         """
         When touchdown is called and tap not draw a line.
         """
-        return (self.width_selected_old == self.width_selected and self.height_selected_old == self.height_selected)
+        return (self.size_selected[0] == 0 and self.size_selected[1] == 0)
